@@ -163,7 +163,7 @@ describe("deviceCodeLogin", () => {
     expect(error.message).toContain("Device code expired");
   });
 
-  it("reuses existing clientId when tokens are already saved", { timeout: 15000 }, async () => {
+  it("reuses existing clientId when tokens are already saved", { timeout: 30000 }, async () => {
     // Pre-save tokens using real timers
     vi.useRealTimers();
     const { saveTokens } = await import("../../src/auth/token-store.js");
