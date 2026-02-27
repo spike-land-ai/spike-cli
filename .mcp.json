@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "spike-land-dev": {
+      "type": "url",
+      "url": "http://localhost:3000/api/mcp",
+      "env": {
+        "SPIKE_AUTH_TOKEN": "${MCP_API_KEY}"
+      }
+    },
+    "toolsets": {
+      "platform-dev": {
+        "servers": [
+          "spike-land-dev"
+        ],
+        "description": "Local spike.land dev server tools (errors, dashboard, apps)"
+      }
+    },
+    "lazyLoading": true
+  }
+}

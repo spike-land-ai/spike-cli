@@ -1,0 +1,12 @@
+name: CI & Publish
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  ci-publish:
+    uses: spike-land-ai/.github/.github/workflows/ci-publish.yml@main
+    with:
+      build-command: "npm run build"
+      test-command: "npm test"
