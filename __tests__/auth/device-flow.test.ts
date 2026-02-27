@@ -163,16 +163,23 @@ describe("deviceCodeLogin", () => {
     expect(error.message).toContain("Device code expired");
   });
 
-  it("reuses existing clientId when tokens are already saved", { timeout: 30000 }, async () => {
-    // Pre-save tokens using real timers
-    vi.useRealTimers();
-    const { saveTokens } = await import("../../src/auth/token-store.js");
-    await saveTokens({
-      clientId: "existing-client",
-      accessToken: "old-token",
-      baseUrl,
-    });
-    vi.useFakeTimers();
+  it("reuses existing clientId when tokens are already saved", async () => {
+    // Pre-save tokens before enabling fake timers.
+    // We write the auth file directly to avoid toggling timers mid-test,
+    // which causes flaky timeouts in CI due to Date.now() drift.
+    const { mkdirSync, writeFileSync, chmodSync } = await import("node:fs");
+    const authDir = join(tempDir, ".spike");
+    mkdirSync(authDir, { recursive: true });
+    const authPath = join(authDir, "auth.json");
+    writeFileSync(
+      authPath,
+      JSON.stringify({
+        clientId: "existing-client",
+        accessToken: "old-token",
+        baseUrl,
+      }),
+    );
+    chmodSync(authPath, 0o600);
 
     // No register mock — goes straight to device code
     mockDeviceCodeResponse();
