@@ -47,9 +47,15 @@ export async function addAlias(
 ): Promise<AliasConfig> {
   const config = await loadAliases();
   if (section === "composite") {
-    config.composite[name] = value as CompositeAlias;
+    if (typeof value === "string") {
+      throw new Error(`Composite alias "${name}" requires a CompositeAlias object, not a string`);
+    }
+    config.composite[name] = value;
   } else {
-    (config[section] as Record<string, string>)[name] = value as string;
+    if (typeof value !== "string") {
+      throw new Error(`Alias "${name}" in section "${section}" requires a string value`);
+    }
+    config[section][name] = value;
   }
   await saveAliases(config);
   return config;

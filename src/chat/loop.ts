@@ -68,7 +68,12 @@ export async function runAgentLoop(
     // Execute all tool calls and build tool_result messages
     const toolResults: Message["content"] = [];
     for (const toolUse of toolUseBlocks) {
-      const input = toolUse.input as Record<string, unknown>;
+      const input: Record<string, unknown> =
+        toolUse.input !== null
+        && typeof toolUse.input === "object"
+        && !Array.isArray(toolUse.input)
+          ? (toolUse.input as Record<string, unknown>)
+          : {};
       const serverName = resolveServerName(ctx.manager, toolUse.name);
       ctx.onToolCall?.(toolUse.name);
       ctx.onToolCallStart?.(toolUse.id, toolUse.name, serverName, input);

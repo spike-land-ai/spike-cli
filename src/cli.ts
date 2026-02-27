@@ -14,10 +14,6 @@
 import { config } from "dotenv";
 import { program } from "commander";
 import { registerServeCommand } from "./commands/serve";
-
-// Load environment variables from .env.local and .env
-config({ path: ".env.local", quiet: true });
-config({ path: ".env", quiet: true });
 import { registerShellCommand } from "./commands/shell";
 import { registerAuthCommand } from "./commands/auth";
 import { registerAliasCommand } from "./commands/alias";
@@ -27,6 +23,10 @@ import { registerChatCommand } from "./commands/chat";
 import { registerStatusCommand } from "./commands/status";
 import { setVerbose } from "./util/logger";
 import { loadAliases } from "./alias/store";
+
+// Load environment variables from .env.local and .env
+config({ path: ".env.local", quiet: true });
+config({ path: ".env", quiet: true });
 
 const VERSION = "0.1.0";
 

@@ -170,7 +170,7 @@ export class ToolsetManager {
     }
 
     if (toolName === "spike__load_toolset") {
-      const name = args.name as string;
+      const name = typeof args.name === "string" ? args.name : "";
       if (!name) {
         return {
           content: [{ type: "text", text: "Error: name is required" }],
@@ -203,7 +203,7 @@ export class ToolsetManager {
     }
 
     if (toolName === "spike__unload_toolset") {
-      const name = args.name as string;
+      const name = typeof args.name === "string" ? args.name : "";
       if (!name) {
         return {
           content: [{ type: "text", text: "Error: name is required" }],

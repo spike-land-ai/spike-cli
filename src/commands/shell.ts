@@ -3,6 +3,7 @@
  */
 
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { Command } from "commander";
 import { discoverConfig } from "../config/discovery";
 import { ServerManager } from "../multiplexer/server-manager";
@@ -122,6 +123,7 @@ function resolveAppServers(
       `Unknown store app: "${appSlug}". Available: ${available}`,
     );
   }
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const entryPath = path.resolve(
     __dirname,
     "../../../store-apps",
