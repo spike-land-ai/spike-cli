@@ -27,7 +27,7 @@ const mockFetch = vi.hoisted(() => vi.fn());
 vi.stubGlobal("fetch", mockFetch);
 
 import { deviceCodeLogin } from "../../src/auth/device-flow.js";
-import { loadTokens } from "../../src/auth/token-store.js";
+import * as tokenStore from "../../src/auth/token-store.js";
 
 describe("deviceCodeLogin", () => {
   let tempDir: string;
@@ -113,7 +113,7 @@ describe("deviceCodeLogin", () => {
 
     // Verify saved to disk
     vi.useRealTimers();
-    const saved = await loadTokens();
+    const saved = await tokenStore.loadTokens();
     expect(saved?.accessToken).toBe("at-123");
   });
 
@@ -164,22 +164,13 @@ describe("deviceCodeLogin", () => {
   });
 
   it("reuses existing clientId when tokens are already saved", async () => {
-    // Pre-save tokens before enabling fake timers.
-    // We write the auth file directly to avoid toggling timers mid-test,
-    // which causes flaky timeouts in CI due to Date.now() drift.
-    const { mkdirSync, writeFileSync, chmodSync } = await import("node:fs");
-    const authDir = join(tempDir, ".spike");
-    mkdirSync(authDir, { recursive: true });
-    const authPath = join(authDir, "auth.json");
-    writeFileSync(
-      authPath,
-      JSON.stringify({
-        clientId: "existing-client",
-        accessToken: "old-token",
-        baseUrl,
-      }),
-    );
-    chmodSync(authPath, 0o600);
+    // Mock loadTokens to return existing tokens directly, avoiding
+    // async file I/O under fake timers which hangs in CI.
+    vi.spyOn(tokenStore, "loadTokens").mockResolvedValueOnce({
+      clientId: "existing-client",
+      accessToken: "old-token",
+      baseUrl,
+    });
 
     // No register mock — goes straight to device code
     mockDeviceCodeResponse();
