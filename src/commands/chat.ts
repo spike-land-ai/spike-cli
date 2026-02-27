@@ -9,6 +9,7 @@ import { ToolsetManager } from "../multiplexer/toolset-manager";
 import { ChatClient } from "../chat/client";
 import { startChatRepl } from "../chat/repl";
 import { error as logError, log } from "../util/logger";
+import { collect, parseInlineServers, parseInlineUrls } from "./common";
 
 export function registerChatCommand(program: Command): void {
   program
@@ -98,36 +99,8 @@ export function registerChatCommand(program: Command): void {
     });
 }
 
-function collect(value: string, previous: string[]): string[] {
-  return previous.concat([value]);
-}
-
 function parseIntArg(value: string): number {
   const parsed = parseInt(value, 10);
   if (isNaN(parsed)) throw new Error(`Invalid number: ${value}`);
   return parsed;
-}
-
-function parseInlineServers(
-  items: string[],
-): Array<{ name: string; command: string; }> {
-  return items.map(item => {
-    const eq = item.indexOf("=");
-    if (eq === -1) {
-      throw new Error(`Invalid --server format: "${item}". Use name=command`);
-    }
-    return { name: item.slice(0, eq), command: item.slice(eq + 1) };
-  });
-}
-
-function parseInlineUrls(
-  items: string[],
-): Array<{ name: string; url: string; }> {
-  return items.map(item => {
-    const eq = item.indexOf("=");
-    if (eq === -1) {
-      throw new Error(`Invalid --server-url format: "${item}". Use name=url`);
-    }
-    return { name: item.slice(0, eq), url: item.slice(eq + 1) };
-  });
 }

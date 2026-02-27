@@ -1,2 +1,2 @@
-import config from "@spike-land-ai/eslint-config";
+import config from "../.github/packages/eslint-config/index.mjs";
 export default config;

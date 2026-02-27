@@ -3,6 +3,7 @@
  * Uses Node.js built-in http module with MCP SDK's StreamableHTTPServerTransport.
  */
 
+import { timingSafeEqual } from "node:crypto";
 import {
   createServer,
   type IncomingMessage,
@@ -20,6 +21,13 @@ import { error as logError, log, warn } from "../util/logger";
 export interface HttpServerOptions {
   port: number;
   apiKey?: string;
+}
+
+function safeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  return timingSafeEqual(ab, bb);
 }
 
 export function createMcpServer(manager: ServerManager): Server {
@@ -99,7 +107,7 @@ export async function startHttpServer(
       // API key validation
       if (options.apiKey) {
         const provided = req.headers["x-api-key"];
-        if (provided !== options.apiKey) {
+        if (typeof provided !== "string" || !safeCompare(provided, options.apiKey)) {
           res.writeHead(401, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "Unauthorized" }));
           return;

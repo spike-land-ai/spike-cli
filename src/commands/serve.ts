@@ -9,6 +9,7 @@ import { ServerManager } from "../multiplexer/server-manager";
 import { ToolsetManager } from "../multiplexer/toolset-manager";
 import { MultiplexerServer } from "../multiplexer/multiplexer-server";
 import { error as logError, log } from "../util/logger";
+import { collect, parseInlineServers, parseInlineUrls } from "./common";
 
 export function registerServeCommand(program: Command): void {
   program
@@ -120,32 +121,4 @@ export function registerServeCommand(program: Command): void {
         process.exit(1);
       }
     });
-}
-
-function collect(value: string, previous: string[]): string[] {
-  return previous.concat([value]);
-}
-
-function parseInlineServers(
-  items: string[],
-): Array<{ name: string; command: string; }> {
-  return items.map(item => {
-    const eq = item.indexOf("=");
-    if (eq === -1) {
-      throw new Error(`Invalid --server format: "${item}". Use name=command`);
-    }
-    return { name: item.slice(0, eq), command: item.slice(eq + 1) };
-  });
-}
-
-function parseInlineUrls(
-  items: string[],
-): Array<{ name: string; url: string; }> {
-  return items.map(item => {
-    const eq = item.indexOf("=");
-    if (eq === -1) {
-      throw new Error(`Invalid --server-url format: "${item}". Use name=url`);
-    }
-    return { name: item.slice(0, eq), url: item.slice(eq + 1) };
-  });
 }
