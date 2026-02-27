@@ -34,8 +34,8 @@ describe("deviceCodeLogin", () => {
 
   beforeEach(async () => {
     tempDir = await mkdtemp(join(tmpdir(), "spike-device-test-"));
-    mockHomedir.mockReturnValue(tempDir);
     vi.clearAllMocks();
+    mockHomedir.mockReturnValue(tempDir);
     vi.useFakeTimers();
   });
 
