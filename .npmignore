@@ -1,0 +1,12 @@
+.changeset/
+.github/
+.nvmrc
+coverage/
+src/**/*.test.ts
+src/**/*.spec.ts
+**/*.test.ts
+**/*.spec.ts
+eslint.config.mjs
+vitest.config.ts
+tsup.config.ts
+CLAUDE.md
