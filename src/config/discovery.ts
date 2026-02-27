@@ -33,8 +33,8 @@ async function loadConfigFile(path: string): Promise<LoadedConfig> {
       `Loaded config from ${path} (${Object.keys(validated.mcpServers).length} servers)`,
     );
     return {
-      servers: validated.mcpServers as Record<string, ServerConfig>,
-      toolsets: validated.toolsets as LoadedConfig["toolsets"],
+      servers: validated.mcpServers,
+      toolsets: validated.toolsets,
       lazyLoading: validated.lazyLoading,
     };
   } catch (err) {

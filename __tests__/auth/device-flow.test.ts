@@ -27,15 +27,15 @@ const mockFetch = vi.hoisted(() => vi.fn());
 vi.stubGlobal("fetch", mockFetch);
 
 import { deviceCodeLogin } from "../../src/auth/device-flow.js";
-import { loadTokens } from "../../src/auth/token-store.js";
+import * as tokenStore from "../../src/auth/token-store.js";
 
 describe("deviceCodeLogin", () => {
   let tempDir: string;
 
   beforeEach(async () => {
     tempDir = await mkdtemp(join(tmpdir(), "spike-device-test-"));
-    mockHomedir.mockReturnValue(tempDir);
     vi.clearAllMocks();
+    mockHomedir.mockReturnValue(tempDir);
     vi.useFakeTimers();
   });
 
@@ -113,7 +113,7 @@ describe("deviceCodeLogin", () => {
 
     // Verify saved to disk
     vi.useRealTimers();
-    const saved = await loadTokens();
+    const saved = await tokenStore.loadTokens();
     expect(saved?.accessToken).toBe("at-123");
   });
 
@@ -163,16 +163,14 @@ describe("deviceCodeLogin", () => {
     expect(error.message).toContain("Device code expired");
   });
 
-  it("reuses existing clientId when tokens are already saved", { timeout: 30000 }, async () => {
-    // Pre-save tokens using real timers
-    vi.useRealTimers();
-    const { saveTokens } = await import("../../src/auth/token-store.js");
-    await saveTokens({
+  it("reuses existing clientId when tokens are already saved", async () => {
+    // Mock loadTokens to return existing tokens directly, avoiding
+    // async file I/O under fake timers which hangs in CI.
+    vi.spyOn(tokenStore, "loadTokens").mockResolvedValueOnce({
       clientId: "existing-client",
       accessToken: "old-token",
       baseUrl,
     });
-    vi.useFakeTimers();
 
     // No register mock — goes straight to device code
     mockDeviceCodeResponse();

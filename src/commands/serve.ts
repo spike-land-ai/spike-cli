@@ -72,7 +72,21 @@ export function registerServeCommand(program: Command): void {
         }
 
         const transport = options.transport as string;
-        const port = parseInt(options.port as string, 10);
+        const rawPort = parseInt(options.port as string, 10);
+        if (isNaN(rawPort) || rawPort < 1 || rawPort > 65535) {
+          logError(
+            `Invalid port: "${options.port as string}". Must be a number between 1 and 65535`,
+          );
+          process.exit(1);
+        }
+        const port = rawPort;
+
+        if (!["stdio", "http", "sse"].includes(transport)) {
+          logError(
+            `Unknown transport: "${transport}". Valid values are: stdio, http, sse`,
+          );
+          process.exit(1);
+        }
 
         if (transport === "http" || transport === "sse") {
           const { startHttpServer } = await import(

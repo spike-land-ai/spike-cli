@@ -3,6 +3,7 @@
  * Uses Node.js built-in http module with MCP SDK's SSEServerTransport (legacy).
  */
 
+import { timingSafeEqual } from "node:crypto";
 import {
   createServer,
   type IncomingMessage,
@@ -12,6 +13,11 @@ import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import type { ServerManager } from "../multiplexer/server-manager";
 import { log, warn } from "../util/logger";
 import { createMcpServer } from "./http-server";
+
+function safeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
 
 export interface SseServerOptions {
   port: number;
@@ -44,7 +50,7 @@ export async function startSseServer(
       // API key validation
       if (options.apiKey) {
         const provided = req.headers["x-api-key"];
-        if (provided !== options.apiKey) {
+        if (typeof provided !== "string" || !safeCompare(provided, options.apiKey)) {
           res.writeHead(401, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "Unauthorized" }));
           return;

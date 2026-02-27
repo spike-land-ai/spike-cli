@@ -508,12 +508,8 @@ function formatAppGroupedTools(
         tool.serverName,
         separator,
       );
-      const defaults = extractDefaults(tool.inputSchema);
       const requiredParams = getRequiredParams(tool.inputSchema);
-
-      const hasAllDefaults = requiredParams.length === 0
-        && Object.keys(defaults).length >= 0;
-      const readyBadge = hasAllDefaults ? dim(" (ready)") : "";
+      const readyBadge = requiredParams.length === 0 ? dim(" (ready)") : "";
 
       lines.push(
         `  ${cyan("/" + displayName)}${readyBadge}  ${dim(tool.description ?? "")}`,
