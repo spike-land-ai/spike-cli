@@ -7,17 +7,19 @@
     "spike": "./dist/cli.js"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     }
   },
   "scripts": {
-    "prepack": "tsup src/cli.ts src/index.ts --format esm --dts --clean",
-    "build": "tsup src/cli.ts src/index.ts --format esm --dts --clean",
+    "prepack": "tsup src/cli.ts src/index.ts --format esm,cjs --dts --clean",
+    "build": "tsup src/cli.ts src/index.ts --format esm,cjs --dts --clean",
     "dev": "tsx src/cli.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
