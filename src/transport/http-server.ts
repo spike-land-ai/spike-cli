@@ -24,10 +24,12 @@ export interface HttpServerOptions {
 }
 
 function safeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  const ab = Buffer.from(a);
-  const bb = Buffer.from(b);
-  return timingSafeEqual(ab, bb);
+  // Hash both strings first to ensure they are the identical length
+  // before passing them to timingSafeEqual, avoiding length-based early exits.
+  import { createHash } from "node:crypto";
+  const aHash = createHash('sha256').update(a).digest();
+  const bHash = createHash('sha256').update(b).digest();
+  return timingSafeEqual(aHash, bHash);
 }
 
 export function createMcpServer(manager: ServerManager): Server {

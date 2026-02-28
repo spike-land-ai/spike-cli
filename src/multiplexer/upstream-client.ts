@@ -76,7 +76,11 @@ export class UpstreamClient {
         command: this.config.command,
         args: this.config.args,
         env: this.config.env
-          ? { ...process.env, ...this.config.env } as Record<string, string>
+          ? {
+            PATH: process.env.PATH,
+            NODE_ENV: process.env.NODE_ENV,
+            ...this.config.env
+          } as Record<string, string>
           : undefined,
       });
     }
