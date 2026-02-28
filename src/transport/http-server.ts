@@ -3,7 +3,7 @@
  * Uses Node.js built-in http module with MCP SDK's StreamableHTTPServerTransport.
  */
 
-import { timingSafeEqual } from "node:crypto";
+import { timingSafeEqual, createHash } from "node:crypto";
 import {
   createServer,
   type IncomingMessage,
@@ -26,7 +26,6 @@ export interface HttpServerOptions {
 function safeCompare(a: string, b: string): boolean {
   // Hash both strings first to ensure they are the identical length
   // before passing them to timingSafeEqual, avoiding length-based early exits.
-  import { createHash } from "node:crypto";
   const aHash = createHash('sha256').update(a).digest();
   const bHash = createHash('sha256').update(b).digest();
   return timingSafeEqual(aHash, bHash);

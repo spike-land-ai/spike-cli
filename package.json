@@ -1,7 +1,7 @@
 {
   "name": "@spike-land-ai/spike-cli",
   "version": "0.1.1",
-  "description": "MCP multiplexer CLI with lazy toolset loading \u2014 aggregate MCP servers, load tool definitions on demand, keep AI context windows focused",
+  "description": "MCP multiplexer CLI with lazy toolset loading — aggregate MCP servers, load tool definitions on demand, keep AI context windows focused",
   "type": "module",
   "bin": {
     "spike": "./dist/cli.js"
@@ -26,23 +26,23 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.78.0",
-    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@anthropic-ai/sdk": "0.78.0",
+    "@modelcontextprotocol/sdk": "1.27.1",
     "commander": "14.0.3",
-    "dotenv": "^17.3.1",
+    "dotenv": "17.3.1",
     "zod": "4.3.6"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.4",
-    "@spike-land-ai/eslint-config": "^2.0.1",
-    "@spike-land-ai/tsconfig": "^2.0.0",
+    "@changesets/cli": "2.29.8",
+    "@spike-land-ai/eslint-config": "workspace:*",
+    "@spike-land-ai/tsconfig": "workspace:*",
     "@types/node": "25.3.2",
     "@vitest/coverage-v8": "4.0.18",
-    "eslint": "^9.27.0",
+    "eslint": "9.27.0",
     "tsup": "8.5.1",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
-    "typescript-eslint": "^8.32.1",
+    "typescript-eslint": "8.32.1",
     "vitest": "4.0.18"
   },
   "engines": {
