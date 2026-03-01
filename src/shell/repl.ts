@@ -76,14 +76,14 @@ export async function startRepl(
         break;
 
       case "call": {
-        const toolName = rest[0];
+        const toolName = rest[0]!;
         const jsonArgs = rest.slice(1).join(" ") || undefined;
         output = await handleCall(ctx, toolName, jsonArgs);
         break;
       }
 
       case "reconnect":
-        output = await handleReconnect(ctx, rest[0]);
+        output = await handleReconnect(ctx, rest[0]!);
         break;
 
       case "help":
@@ -95,7 +95,7 @@ export async function startRepl(
         break;
 
       case "load":
-        output = handleLoadToolset(ctx, rest[0]);
+        output = handleLoadToolset(ctx, rest[0]!);
         break;
 
       case "alias":

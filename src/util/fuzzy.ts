@@ -66,6 +66,7 @@ function isWordBoundary(target: string, index: number): boolean {
 
   // camelCase boundary: lowercase followed by uppercase
   if (
+    prev && curr &&
     prev === prev.toLowerCase() && curr === curr.toUpperCase()
     && curr !== curr.toLowerCase()
   ) {
